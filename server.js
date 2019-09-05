@@ -24,7 +24,7 @@ server.get('/api/posts', (req, res) => {
         if (posts) {
             res.status(200).json(posts)
         } else {
-            res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+            res.status(500).json({ errorMessage: "Please provide title and contents for the post." })
         }
     })
         
@@ -34,11 +34,29 @@ server.get('/api/posts/:id', (req, res) => {
     db
     .findById(req.params.id)
     .then(posts => 
-        {if (req.params.id) {
-            res.status(200).json(posts)
-        } else {
-            res.status(400).json({ message: "The post with the specified ID does not exist." })
+        { if (!req.params.id){
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        } else if (!posts){
+            res.status(500).json({ error: "The post information could not be retrieved." })
         }
+        else {
+            res.status(200).json(posts)
+        } 
+    })
+})
+
+server.get('/api/posts/:id/comments', (req, res) => {
+    db
+    .findPostComments(req.params.id)
+    .then(comments => 
+        { if (!req.params.id){
+            res.status(404).json({ message: "The post with the specified ID does not exist." })
+        } else if (!comments){
+            res.status(500).json({ error: "The comments information could not be retrieved." })
+        }
+        else {
+            res.status(200).json(comments)
+        } 
     })
 })
 // server.post("/api/posts", (req, res) => {
