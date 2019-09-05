@@ -33,14 +33,14 @@ server.get('/api/posts', (req, res) => {
 server.get('/api/posts/:id', (req, res) => {
     db
     .findById(req.params.id)
-    .then(posts => 
+    .then(post => 
         { if (!req.params.id){
             res.status(404).json({ message: "The post with the specified ID does not exist." })
-        } else if (!posts){
+        } else if (!post){
             res.status(500).json({ error: "The post information could not be retrieved." })
         }
         else {
-            res.status(200).json(posts)
+            res.status(200).json(post)
         } 
     })
 })
@@ -71,6 +71,40 @@ server.post('/api/posts', (req, res) => {
         res.status(201).json(posts)})
     
 })
+
+let commentId = 9
+server.post('/api/posts/:id/comments', (req, res) => {
+    const comment = req.body;
+    // comment.id = commentId++;
+    db
+    .findCommentById(req.params.id)
+    .then(posts => {
+        posts.push(comment)
+        res.status(201).json(comments)
+    }
+        
+    )
+})
+
+server.delete('/api/posts/:id', (req, res) => {
+    const id = req.params.id;
+    db
+    .find()
+    .then(posts => 
+    {const filteredPosts = posts.filter(m => m.id !== Number(id));
+    res.status(200).json(filteredPosts)
+    })
+  });
+
+server.put('/api/posts/:id', (req, res) => {
+    const editedPost = req.body;
+    db
+    .findById(req.params.id)
+    .then(post => 
+        res.status(200).json(editedPost)
+        )
+})
+  
 
 
 // server.post("/api/posts", (req, res) => {
