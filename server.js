@@ -59,6 +59,20 @@ server.get('/api/posts/:id/comments', (req, res) => {
         } 
     })
 })
+
+let postId = 10
+server.post('/api/posts', (req, res) => {
+    const post = req.body;
+    post.id = postId++;
+    db
+    .find()
+    .then(posts => 
+        {posts.push(post)
+        res.status(201).json(posts)})
+    
+})
+
+
 // server.post("/api/posts", (req, res) => {
 //     if(!req.body.title || !req.body.contents){
 //         res.status(400).json({error: "Please provide title and contents for the post."})
