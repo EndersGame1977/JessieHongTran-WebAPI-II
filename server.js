@@ -18,7 +18,9 @@ server.get('/', (req, res) => {
 })
 
 server.get('/api/posts', (req, res) => {
-    db.find().then(posts => {
+    db
+    .find()
+    .then(posts => {
         if (posts) {
             res.status(200).json(posts)
         } else {
@@ -26,6 +28,18 @@ server.get('/api/posts', (req, res) => {
         }
     })
         
+})
+
+server.get('/api/posts/:id', (req, res) => {
+    db
+    .findById(req.params.id)
+    .then(posts => 
+        {if (req.params.id) {
+            res.status(200).json(posts)
+        } else {
+            res.status(400).json({ message: "The post with the specified ID does not exist." })
+        }
+    })
 })
 // server.post("/api/posts", (req, res) => {
 //     if(!req.body.title || !req.body.contents){
